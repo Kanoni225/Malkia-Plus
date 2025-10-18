@@ -106,6 +106,18 @@
       document.getElementById("output").innerHTML = `Total Premium: KSh ${total.toLocaleString()}`;
       document.getElementById("payBtn").style.display = "block";
     }
+
+    function payWithMpesa() {
+      const name= document.getElementById("name").value.trim();
+      const mobile= document.getElementById("mobile").value.trim();
+      const totalText= document.getElementById("output").innerText;
+    
+      if (!name || !mobile){
+        alert("Please enter your name and Mobile Number before proceeding with payment.");
+        return;
+      }
+      alert(`Thank you, ${name}!\n\n${totalText}\n\nA payment prompt has been sent to ${mobile}.`);
+    }
   </script>
 
 </body>
