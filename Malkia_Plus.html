@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malkia Plus Premium Calculator</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      color: #6c2eb9;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 10px;
+      display: block;
+    }
+    select, input[type="text"], input[type="number"], input[type="checkbox"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #6c2eb9;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      width: 100%;
+      margin-top: 15px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background-color: #5a22a3;
+    }
+    .output {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .mpesa {
+      background-color: #34b233;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Malkia Plus Premium Calculator</h2>
+
+    <label for="tier">Choose Tier:</label>
+    <select id="tier">
+      <option value="620">Tier 1 — Basic Cancer Cover (KSh 620)</option>
+      <option value="900">Tier 2 — + Maternity & Reproductive Illness (KSh 900)</option>
+      <option value="1500">Tier 3 — + Postnatal & Critical Illness (KSh 1500)</option>
+    </select>
+
+    <label><input type="checkbox" id="addon" /> Add Preventive Benefit (+KSh 200)</label>
+
+    <label>Name:</label>
+    <input type="text" id="name" placeholder="Enter your name" />
+
+    <label>ID Number:</label>
+    <input type="number" id="id" placeholder="Enter your ID number" />
+
+    <label>Region:</label>
+    <input type="text" id="region" placeholder="Enter your region" />
+
+    <label>Mobile Number:</label>
+    <input type="text" id="mobile" placeholder="07XXXXXXXX" />
+
+    <button onclick="calculatePremium()">Calculate Premium</button>
+
+    <div class="output" id="output"></div>
+    <button class="mpesa" id="payBtn" style="display:none;">Pay with M-Pesa</button>
+  </div>
+
+  <script>
+    function calculatePremium() {
+      const tier = parseFloat(document.getElementById("tier").value);
+      const addon = document.getElementById("addon").checked ? 200 : 0;
+      const total = tier + addon;
+
+      document.getElementById("output").innerHTML = `Total Premium: KSh ${total.toLocaleString()}`;
+      document.getElementById("payBtn").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
