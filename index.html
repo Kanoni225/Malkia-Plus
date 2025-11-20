@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta-name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Malkia Plus Premium Calculator</title>
+
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
@@ -18,7 +19,7 @@
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 400px;
+      max-width: 420px;
       width: 100%;
     }
     h2 {
@@ -31,7 +32,7 @@
       margin-top: 10px;
       display: block;
     }
-    select, input[type="text"], input[type="number"], input[type="checkbox"] {
+    input, select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -53,72 +54,145 @@
     button:hover {
       background-color: #5a22a3;
     }
+    .hidden {
+      display: none;
+    }
     .output {
       text-align: center;
       margin-top: 15px;
       font-size: 18px;
       font-weight: bold;
     }
-    .mpesa {
-      background-color: #34b233;
-      margin-top: 10px;
-    }
   </style>
 </head>
+
 <body>
 
-  <div class="card">
-    <h2>Malkia Plus Premium Calculator</h2>
+<div class="card">
 
-    <label for="tier">Choose Tier:</label>
-    <select id="tier">
-      <option value="620">Tier 1 — Basic Cancer Cover (KSh 620)</option>
-      <option value="900">Tier 2 — + Maternity & Reproductive Illness (KSh 900)</option>
-      <option value="1500">Tier 3 — + Postnatal & Critical Illness (KSh 1500)</option>
-    </select>
+  <h2>Malkia Plus Registration</h2>
 
-    <label><input type="checkbox" id="addon" /> Add Preventive Benefit (+KSh 200)</label>
+  <!-- PAGE 1 -->
+  <div id="page1">
 
     <label>Name:</label>
-    <input type="text" id="name" placeholder="Enter your name" />
+    <input type="text" id="name" placeholder="Enter your name">
 
     <label>ID Number:</label>
-    <input type="number" id="id" placeholder="Enter your ID number" />
+    <input type="number" id="idnum" placeholder="Enter your ID number">
 
-    <label>Region:</label>
-    <input type="text" id="region" placeholder="Enter your region" />
+    <label>Date of Birth:</label>
+    <input type="date" id="dob">
+
+    <label>Region of Residence:</label>
+    <input type="text" id="region" placeholder="Enter your region">
 
     <label>Mobile Number:</label>
-    <input type="text" id="mobile" placeholder="07XXXXXXXX" />
+    <input type="text" id="mobile" placeholder="07XXXXXXXX">
+
+    <label>Email (Optional):</label>
+    <input type="email" id="email" placeholder="example@gmail.com">
+
+    <label>Education Level:</label>
+    <input type="text" id="education" placeholder="Your highest education">
+
+    <label>Employment Status:</label>
+    <input type="text" id="employment" placeholder="Employed / Self-Employed / Unemployed">
+
+    <label>Salary Range:</label>
+    <input type="text" id="salary" placeholder="e.g. 20,000 - 40,000">
+
+    <button onclick="goToPage2()">Next</button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div id="page2" class="hidden">
+
+    <h2>Choose Your Cover</h2>
+
+    <label>Age Band:</label>
+    <select id="ageBand">
+      <option value="18-30">18–30</option>
+      <option value="30-50">30–50</option>
+      <option value="50-70">50–70</option>
+    </select>
+
+    <label>Choose Tier:</label>
+    <select id="tier">
+      <option value="tier1">Tier 1 — Cancer + Derma + Last Expense</option>
+      <option value="tier2">Tier 2 — Tier 1 + Wellness + Surgical</option>
+    </select>
+
+    <label>Select Option:</label>
+    <select id="option">
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3">Option 3</option>
+      <option value="4">Option 4</option>
+      <option value="5">Option 5</option>
+      <option value="6">Option 6</option>
+      <option value="7">Option 7</option>
+    </select>
 
     <button onclick="calculatePremium()">Calculate Premium</button>
 
     <div class="output" id="output"></div>
-    <button class="mpesa" id="payBtn" style="display:none;" onclick="payWithMpesa()">Pay with M-Pesa</button>
+
+    <!-- M-PESA BUTTON (Hidden Until Premium is Calculated) -->
+    <button id="mpesaButton" class="hidden" onclick="simulateMpesa()">Pay with M-Pesa</button>
+
   </div>
 
-  <script>
-    function calculatePremium() {
-      const tier = parseFloat(document.getElementById("tier").value);
-      const addon = document.getElementById("addon").checked ? 200 : 0;
-      const total = tier + addon;
+</div>
 
-      document.getElementById("output").innerHTML = `Total Premium: KSh ${total.toLocaleString()}`;
-      document.getElementById("payBtn").style.display = "block";
+<script>
+  /* PREMIUM TABLE */
+  const premiums = {
+    tier1: {
+      "18-30": [620, 630, 670, 1175, 1235, 1255, 1315],
+      "30-50": [680, 720, 790, 1415, 1590, 1730, 1900],
+      "50-70": [800, 890, 1020, 1870, 2270, 2640, 3040]
+    },
+    tier2: {
+      "18-30": [1269, 1409, 1579, 2474, 2793, 3073, 3653],
+      "30-50": [1492, 1694, 1926, 3038, 3538, 4003, 4822],
+      "50-70": [1287, 1474, 1702, 2844, 3439, 4004, 4793]
+    }
+  };
+
+  /* PAGE SWITCH */
+  function goToPage2() {
+    const name = document.getElementById("name").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+
+    if (!name || !mobile) {
+      alert("Please enter Name and Mobile Number before continuing.");
+      return;
     }
 
-    function payWithMpesa() {
-      const name= document.getElementById("name").value.trim();
-      const mobile= document.getElementById("mobile").value.trim();
-      const totalText= document.getElementById("output").innerText;
-    
-      if (!name || !mobile){
-        alert("Please enter your name and Mobile Number before proceeding with payment.");
-        return;
-      }
-      alert(`Thank you, ${name}!\n\n${totalText}\n\nA payment prompt has been sent to ${mobile}.`);
-    }
-  </script>
+    document.getElementById("page1").classList.add("hidden");
+    document.getElementById("page2").classList.remove("hidden");
+  }
+
+  /* PREMIUM CALCULATION */
+  function calculatePremium() {
+    const age = document.getElementById("ageBand").value;
+    const tier = document.getElementById("tier").value;
+    const option = parseInt(document.getElementById("option").value) - 1;
+
+    const premium = premiums[tier][age][option];
+
+    document.getElementById("output").innerHTML =
+      `Your Premium is: <br><strong>KSh ${premium.toLocaleString()}</strong>`;
+
+    document.getElementById("mpesaButton").classList.remove("hidden");
+  }
+
+  /* M-PESA SIMULATION */
+  function simulateMpesa() {
+    alert("✔ STK Push simulated!\n\n(For demo purposes only — no real payment processed.)");
+  }
+</script>
 
 </body>
 </html>
